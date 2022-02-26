@@ -3,11 +3,12 @@ from distutils.debug import DEBUG
 from doctest import debug
 import imp
 from pickle import TRUE
+from traceback import print_tb
 from urllib import request
-from flask import Flask, Response, request
+from flask import Flask, Response, request, jsonify
 import pymongo
 import json
-
+from bson.objectid import ObjectId
 app = Flask(__name__)
 
 try: 
@@ -44,10 +45,50 @@ def create_user():
             status=200,
             mimetype="application/json"
         )
-
     except Exception as ex:
         print(ex)
         return 400
+
+@app.route("/getUsers", methods=["GET"])
+def list_users():
+    try:
+        data = list(db.users.find())
+        for user in data:
+            user["_id"] = str(user["_id"])
+        return Response(
+            response= json.dumps(data),
+            status=200,
+            mimetype="application/json"
+        ) 
+    except Exception as ex:
+        print(ex)
+        return Response(
+            response= json.dumps({"message": "cannot read users"}),
+            status=500,
+            mimetype="application/json"
+        ) 
+
+@app.route("/getUser", methods=["GET"])
+def list_user_by_id():
+    id = request.form["id"]
+    objInstance = ObjectId(id)
+    try:
+        data =  list(db.users.find({"_id": objInstance}))
+        for user in data:
+            user["_id"] = str(user["_id"])
+        print(data) #descobrir como mandar essas informações via json.
+        return Response(
+            response= json.dumps(data),
+            status=200,
+            mimetype="application/json"
+        ) 
+    except Exception as ex:
+        print(ex)
+        return Response(
+            response= json.dumps({"message": "cannot find that user"}),
+            status=500,
+            mimetype="application/json"
+        ) 
 
 if __name__ == "__main__":
     app.run(port=8080, debug=TRUE)

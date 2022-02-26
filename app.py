@@ -2,6 +2,7 @@ from crypt import methods
 from distutils.debug import DEBUG
 from doctest import debug
 import imp
+from multiprocessing.sharedctypes import Value
 from pickle import TRUE
 from traceback import print_tb
 from urllib import request
@@ -18,6 +19,8 @@ try:
     print("CONNECTION TO DB SUCCESSFULLY")
 
     db = mongo.EasyPay
+    db.users.createIndex( { "email": 1 }, { unique: true } )
+
 except:
     print("ERROR CONNECT TO DB")
 
@@ -76,7 +79,6 @@ def list_user_by_id():
         data =  list(db.users.find({"_id": objInstance}))
         for user in data:
             user["_id"] = str(user["_id"])
-        print(data) #descobrir como mandar essas informações via json.
         return Response(
             response= json.dumps(data),
             status=200,
@@ -85,10 +87,50 @@ def list_user_by_id():
     except Exception as ex:
         print(ex)
         return Response(
-            response= json.dumps({"message": "cannot find that user"}),
+            response= json.dumps({"message": "cannot find this user"}),
+            status=404,
+            mimetype="application/json"
+        ) 
+
+@app.route("/update/<id>", methods=["PATCH"])
+def update(id):
+    local = request.form["local"]
+    value = request.form["value"]
+    newvalues = { "$set": { local: value } }
+    
+    try:
+        dbResponse = db.users. update_one(
+            {"_id": ObjectId(id)},newvalues)
+        return Response(
+            response= json.dumps({"message": "user updated"}),
+            status=200,
+            mimetype="application/json"
+        ) 
+
+    except Exception as ex:
+        print(ex)
+        return Response(
+            response= json.dumps({"message": "cannot update this user"}),
             status=500,
             mimetype="application/json"
         ) 
+@app.route("/delete/<id>", methods=["DELETE"])
+def delete_user(id):
+    try:
+        dbResponse = db.users.delete_one({"_id": ObjectId(id)})
+        return Response(
+            response= json.dumps({"message": "user deleted"}),
+            status=200,
+            mimetype="application/json"
+        )  
+    except Exception as ex:
+        print(ex)
+        return Response(
+            response= json.dumps({"message": "cannot delete this user"}),
+            status=500,
+            mimetype="application/json"
+        ) 
+
 
 if __name__ == "__main__":
     app.run(port=8080, debug=TRUE)

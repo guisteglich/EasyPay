@@ -1,136 +1,25 @@
-from crypt import methods
-from distutils.debug import DEBUG
-from doctest import debug
-import imp
-from multiprocessing.sharedctypes import Value
-from pickle import TRUE
-from traceback import print_tb
-from urllib import request
 from flask import Flask, Response, request, jsonify
-import pymongo
-import json
-from bson.objectid import ObjectId
+
 app = Flask(__name__)
 
-try: 
-    mongo = pymongo.MongoClient(
-        host="localhost",
-        port=27017)
-    print("CONNECTION TO DB SUCCESSFULLY")
+from api.http.create import create
+from api.http.delete import delete
+from api.http.get_user_by_id import get_user_by_id
+from api.http.get_users import get_users
+from api.http.update import update_user
 
-    db = mongo.EasyPay
-    db.users.createIndex( { "email": 1 }, { unique: true } )
+app = Flask(__name__)
 
-except:
-    print("ERROR CONNECT TO DB")
+app.register_blueprint(create)
+app.register_blueprint(delete)
+app.register_blueprint(get_user_by_id)
+app.register_blueprint(get_users)
+app.register_blueprint(update_user)
+
 
 @app.route("/")
 def home():
     return "this is a home page"
 
-@app.route("/users", methods=["POST"])
-def create_user():
-    try:
-        user = {
-            "name": request.form["name"], 
-            "lastName": request.form["lastName"], 
-            "email": request.form["email"]
-            }
-        dbResponse = db.users.insert_one(user)
-        print(dbResponse.inserted_id)
-        # for attr in dir(dbResponse):
-        #     print(attr)
-        return Response(
-            response= json.dumps({
-                "message": "user created with successfully", 
-                "id": f"{dbResponse.inserted_id}"
-                }),
-            status=200,
-            mimetype="application/json"
-        )
-    except Exception as ex:
-        print(ex)
-        return 400
-
-@app.route("/getUsers", methods=["GET"])
-def list_users():
-    try:
-        data = list(db.users.find())
-        for user in data:
-            user["_id"] = str(user["_id"])
-        return Response(
-            response= json.dumps(data),
-            status=200,
-            mimetype="application/json"
-        ) 
-    except Exception as ex:
-        print(ex)
-        return Response(
-            response= json.dumps({"message": "cannot read users"}),
-            status=500,
-            mimetype="application/json"
-        ) 
-
-@app.route("/getUser", methods=["GET"])
-def list_user_by_id():
-    id = request.form["id"]
-    objInstance = ObjectId(id)
-    try:
-        data =  list(db.users.find({"_id": objInstance}))
-        for user in data:
-            user["_id"] = str(user["_id"])
-        return Response(
-            response= json.dumps(data),
-            status=200,
-            mimetype="application/json"
-        ) 
-    except Exception as ex:
-        print(ex)
-        return Response(
-            response= json.dumps({"message": "cannot find this user"}),
-            status=404,
-            mimetype="application/json"
-        ) 
-
-@app.route("/update/<id>", methods=["PATCH"])
-def update(id):
-    local = request.form["local"]
-    value = request.form["value"]
-    newvalues = { "$set": { local: value } }
-    
-    try:
-        dbResponse = db.users. update_one(
-            {"_id": ObjectId(id)},newvalues)
-        return Response(
-            response= json.dumps({"message": "user updated"}),
-            status=200,
-            mimetype="application/json"
-        ) 
-
-    except Exception as ex:
-        print(ex)
-        return Response(
-            response= json.dumps({"message": "cannot update this user"}),
-            status=500,
-            mimetype="application/json"
-        ) 
-@app.route("/delete/<id>", methods=["DELETE"])
-def delete_user(id):
-    try:
-        dbResponse = db.users.delete_one({"_id": ObjectId(id)})
-        return Response(
-            response= json.dumps({"message": "user deleted"}),
-            status=200,
-            mimetype="application/json"
-        )  
-    except Exception as ex:
-        print(ex)
-        return Response(
-            response= json.dumps({"message": "cannot delete this user"}),
-            status=500,
-            mimetype="application/json"
-        ) 
-
-
 if __name__ == "__main__":
-    app.run(port=8080, debug=TRUE)
+    app.run(port=8080)

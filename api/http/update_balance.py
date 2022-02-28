@@ -6,13 +6,11 @@ from api.service import list_users
 import json
 from bson.objectid import ObjectId
 
-
 balance_update = Blueprint('balance_update', __name__)
 
 @balance_update.route("/updateBalance/<id>", methods=["PATCH"])
 def update_balance(id):
     value = request.form["value"]
-  
     try:
         data =  list_users.list_user_by_id(id)
         user = data[0]
@@ -23,7 +21,6 @@ def update_balance(id):
             status=200,
             mimetype="application/json"
         ) 
-
     except Exception as ex:
         print(ex)
         return Response(

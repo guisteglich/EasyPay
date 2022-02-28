@@ -10,8 +10,10 @@ def create_user():
         user = {
             "name": request.form["name"], 
             "lastName": request.form["lastName"], 
+            "CPF": request.form["CPF"],
             "email": request.form["email"], 
-            "balance": 0
+            "balance": 0, 
+            "is_common_user": request.form["is_common_user"]
             }       
         dbResponse = service.create_new_user(user)
         print(dbResponse.inserted_id)
@@ -25,4 +27,4 @@ def create_user():
         )
     except Exception as ex:
         print(ex)
-        return 400
+        return 404

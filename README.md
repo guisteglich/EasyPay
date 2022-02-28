@@ -7,7 +7,7 @@ This is a application of payment in construction.
 
 ### Contents
 ---
-##### Why?
+#### Why?
 
 I wanted a tool that allows you to:
 
@@ -15,7 +15,7 @@ I wanted a tool that allows you to:
 - use money transfer methods
 - make easy the process to transfer, pay and receive money. 
 
-##### Built With
+### Built With
  <a href="https://github.com/search?q=user%3ADenverCoder1+language%3Apython"><img alt="Python" src="https://img.shields.io/badge/Python-14354C.svg?logo=python"></a>
  <a href="#"><img alt="MongoDB" src="https://img.shields.io/badge/MONGODB-47A248.svg?&style=flat&logo=mongodb&logoColor=white"></a>
 ### Instalation
@@ -35,7 +35,7 @@ pip install requirements.txt
 flaks run 
 ```
 
-###Roadmap
+## Roadmap
 ---
 - [X] Create user account 
 - [X] Update, Delete user account

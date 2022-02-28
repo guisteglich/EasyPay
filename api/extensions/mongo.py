@@ -2,6 +2,8 @@ from dataclasses import dataclass
 import pymongo
 from bson.objectid import ObjectId
 
+# from api.http.transaction import transaction
+
 
 try: 
     mongo = pymongo.MongoClient(
@@ -39,3 +41,10 @@ def update_user(id, newvalues):
             {"_id": ObjectId(id)},newvalues)
     return dbResponse
 
+def create_transaction(transaction):
+    dbResponse = db.transactions.insert_one(transaction)
+    return dbResponse 
+
+def delete_transaction(id):
+    dbResponse = db.transactions.delete_one({"_id": ObjectId(id)})
+    return dbResponse

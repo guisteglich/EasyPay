@@ -8,6 +8,7 @@ from api.http.get_user_by_id import get_user_by_id
 from api.http.get_users import get_users
 from api.http.update import update_user
 from api.http.update_balance import balance_update
+from api.http.transaction import user_transaction
 
 app = Flask(__name__)
 
@@ -17,6 +18,7 @@ app.register_blueprint(get_user_by_id)
 app.register_blueprint(get_users)
 app.register_blueprint(update_user)
 app.register_blueprint(balance_update)
+app.register_blueprint(user_transaction)
 
 
 @app.route("/")

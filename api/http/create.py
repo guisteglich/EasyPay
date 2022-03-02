@@ -1,7 +1,7 @@
 from flask import Flask, Response, request, jsonify,  Blueprint
 import json
 from api.service import create_new_user as service
-from api.extensions import send_confirmation as mail
+from api.service import send_confirmation as mail
 
 create = Blueprint('create', __name__)
 

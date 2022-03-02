@@ -5,7 +5,7 @@ from sqlalchemy import false, true
 from api.service import create_new_transaction as service
 # from api.service import create_new_transaction
 from api.extensions.mongo import delete_transaction
-from api.extensions import before_finish_transaction as confirm
+from api.service import before_finish_transaction as confirm
 
 user_transaction = Blueprint('user_transaction', __name__)
 

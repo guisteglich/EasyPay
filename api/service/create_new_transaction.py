@@ -12,7 +12,7 @@ def create_new_transaction(transaction):
 def update_values_of_transaction(transaction):
     try:
         data_payer =  list_users.list_user_by_id(transaction["payer"])
-        print("dados do pagador: ", data_payer)
+        #print("dados do pagador: ", data_payer)
         user_payer = data_payer[0]
         type_of_payer = user_payer["is_common_user"]
         balance_payer = user_payer["balance"]
@@ -21,7 +21,7 @@ def update_values_of_transaction(transaction):
                 transaction["payer"], 
                 transaction["value"], 
                 balance_payer)
-            print("essa é a resposta do pagador: ", dbResponsePayer)
+            #print("essa é a resposta do pagador: ", dbResponsePayer)
             if dbResponsePayer != "not ok":
                 data_payee =  list_users.list_user_by_id(transaction["payee"])
                 user_payee = data_payee[0]

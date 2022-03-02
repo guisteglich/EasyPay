@@ -14,21 +14,23 @@ def update_values_of_transaction(transaction):
         data_payer =  list_users.list_user_by_id(transaction["payer"])
         print("dados do pagador: ", data_payer)
         user_payer = data_payer[0]
+        type_of_payer = user_payer["is_common_user"]
         balance_payer = user_payer["balance"]
-        dbResponsePayer = service.balance_update_payer(
-            transaction["payer"], 
-            transaction["value"], 
-            balance_payer)
-        print("essa é a resposta do pagador: ", dbResponsePayer)
-        if dbResponsePayer != "not ok":
-            data_payee =  list_users.list_user_by_id(transaction["payee"])
-            user_payee = data_payee[0]
-            balance_payee = user_payee["balance"]
-            dbResponsePayer = service.balance_update(
-                transaction["payee"], 
+        if type_of_payer != false:
+            dbResponsePayer = service.balance_update_payer(
+                transaction["payer"], 
                 transaction["value"], 
-                balance_payee)
-            return true
+                balance_payer)
+            print("essa é a resposta do pagador: ", dbResponsePayer)
+            if dbResponsePayer != "not ok":
+                data_payee =  list_users.list_user_by_id(transaction["payee"])
+                user_payee = data_payee[0]
+                balance_payee = user_payee["balance"]
+                dbResponsePayer = service.balance_update(
+                    transaction["payee"], 
+                    transaction["value"], 
+                    balance_payee)
+                return true
         else:
             return "not ok"
     except:

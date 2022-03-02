@@ -1,9 +1,3 @@
-# {
-#     "value" : 100.00,
-#     "payer" : 4,
-#     "payee" : 15
-# }
-
 from flask import Flask, Response, request,  Blueprint
 import json
 

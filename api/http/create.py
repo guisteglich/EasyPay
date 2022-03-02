@@ -1,6 +1,7 @@
 from flask import Flask, Response, request, jsonify,  Blueprint
 import json
 from api.service import create_new_user as service
+from api.extensions import send_confirmation as mail
 
 create = Blueprint('create', __name__)
 
@@ -17,6 +18,7 @@ def create_user():
             }       
         dbResponse = service.create_new_user(user)
         print(dbResponse.inserted_id)
+        confirmation = mail.send_confirmation(user["name"], user["email"])
         return Response(
             response= json.dumps({
                 "message": "user created with successfully", 

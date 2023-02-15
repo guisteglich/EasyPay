@@ -20,18 +20,18 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
-    - name: send message using with
-      uses: appleboy/telegram-action@master
-      with:
-        to: ${{ secrets.TELEGRAM_TO }}
-        token: ${{ secrets.TELEGRAM_TOKEN }}
-        message: |
-          The ${{ github.event_name }} event triggered second step.
-          show the github variable ref: ${{ github.ref }}
-          show the github variable commit: ${{ github.sha }}
-          show the github variable ref: {{ commit.ref }}
-          show the github variable commit: {{ commit.sha }}
-          Commit Message: ${{ github.event.head_commit.message }}
+#     - name: send message using with
+#       uses: appleboy/telegram-action@master
+#       with:
+#         to: ${{ secrets.TELEGRAM_TO }}
+#         token: ${{ secrets.TELEGRAM_TOKEN }}
+#         message: |
+#           The ${{ github.event_name }} event triggered second step.
+#           show the github variable ref: ${{ github.ref }}
+#           show the github variable commit: ${{ github.sha }}
+#           show the github variable ref: {{ commit.ref }}
+#           show the github variable commit: {{ commit.sha }}
+#           Commit Message: ${{ github.event.head_commit.message }}
         
  
  #Build docker image
